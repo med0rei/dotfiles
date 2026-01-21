@@ -56,7 +56,9 @@ set -gx GNUPGHOME $XDG_DATA_HOME/gnupg
 
 # Homebrew
 # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if test "$__platform" = "macos"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+end
 
 
 # Editor
@@ -75,7 +77,9 @@ set -gx WINEPREFIX $XDG_DATA_HOME/wine
 
 # JetBrains
 # Added by Toolbox App
-fish_add_path $HOME/Library/Application Support/JetBrains/Toolbox/scripts
+if test "$__platform" = "macos"
+  fish_add_path $HOME/Library/Application Support/JetBrains/Toolbox/scripts
+end
 
 
 # Rust
