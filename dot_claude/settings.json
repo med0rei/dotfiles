@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd)",
+      "Bash(git diff)",
+      "Bash(ls)",
+      "Bash(sed)",
+      "Bash(pnpm test)",
+      "Bash(pnpm build)",
+      "Read(./.env.example)"
+    ],
+    "deny": [
+      "Bash(rm)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)"
+    ]
+  },
+  "model": "sonnet",
+  "enabledPlugins": {
+    "frontend-design@claude-code-plugins": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "terminal-notifier -title \"Claude Code\" -message \"Task finished\""
+          }
+        ]
+      }
+    ]
+  }
+}

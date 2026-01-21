@@ -1,0 +1,66 @@
+[alias]
+  a        = add
+  as       = !git add -A
+  as       = !git add -A && git status
+  au       = !git add -u
+  aus      = !git add -u && git status
+  br       = branch
+  brd      = branch -d
+  cl       = clone
+  clb      = clone -b
+  cm       = commit
+  cmm      = commit -m
+  del      = reset --soft HEAD^
+  diffnpst = !git --no-pager diff --staged
+  ev       = !git add -A && git commit -m "wip" && git push origin HEAD
+  ic       = !git commit --allow-empty -m "Initial commit"
+  lognp    = !git --no-pager log
+  s        = status
+  sh       = stash
+  ps       = push
+  pso      = push origin
+  psoh     = push origin HEAD
+  pl       = pull
+  plo      = pull origin
+  ploh     = pull origin HEAD
+  plus     = pull upstream
+  si       = switch
+  sic      = switch -c
+  sim      = switch main
+  sid      = switch develop
+  us       = reset HEAD
+
+[user]
+  name       = 音㦡
+  email      = 215371699+med0rei@users.noreply.github.com
+  signingkey = 85A6A9286F89E4C3
+
+[credential "https://github.com"]
+  helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+  helper = !/usr/bin/gh auth git-credential
+
+[commit]
+  gpgsign = true
+
+[core]
+  quotepath = false
+
+[init]
+  defaultBranch = main
+
+[tag]
+  gpgsign = true
+
+[filter "lfs"]
+  clean    = git-lfs clean -- %f
+  smudge   = git-lfs smudge -- %f
+  process  = git-lfs filter-process
+  required = true
+
+[mergetool "neovimdiff"]
+  cmd = nvim -d $LOCAL $MERGED $REMOTE -c 'wincmd l' -c 'wincmd J'
+
+[merge]
+  tool = neovimdiff
