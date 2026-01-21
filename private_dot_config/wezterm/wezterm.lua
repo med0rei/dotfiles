@@ -44,11 +44,13 @@ end)
 -- Font Settings
 -- config.font = wezterm.font("SauceCodePro Nerd Font")
 -- config.font_size = 12
-config.font = wezterm.font("PixelMplus12", { weight = "Regular" })
-config.font_size = 14
-font = wezterm.font_with_fallback({
-	"SauceCodePro Nerd Font",
+config.font = wezterm.font_with_fallback({
+	{ family = "PixelMplus12", weight = "Regular" },
+	{ family = "Unifont-JP", weight = "Regular" },
+	{ family = "SauceCodePro Nerd Font", weight = "Regular" },
+	{ family = "Noto Color Emoji", weight = "Regular" },
 })
+config.font_size = 14
 -- config.font_size = 17
 
 -- Suppress missing glyph warnings
@@ -61,7 +63,7 @@ config.color_scheme = "Catppuccin Mocha"
 config.background = {
 	{
 		source = {
-			File = wezterm.config_dir .. "/wallpapers/cafe_1_1.jpg",
+			File = wezterm.config_dir .. "/wallpapers/c_1.jpg",
 		},
 		hsb = { brightness = 0.02 },
 	},

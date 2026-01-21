@@ -25,7 +25,20 @@ set -g theme_display_git_master_branch yes
 set -g theme_newline_cursor            yes
 
 # Prompt separator line between cwd and input
-set -g theme_newline_prompt (begin; set_color --bold brcyan; printf '%s' 'Eclipse first, the rest nowhere.\n'; set_color normal; printf '\n'; set_color --bold brcyan; printf '%s' '> '; set_color normal; end)
+# Random message function
+function __random_prompt_message
+    set -l messages \
+        "Eclipse first, the rest nowhere." \
+        "心不在焉，視而不見，聽而不聞，食而不知其味。"
+
+    set -l random_index (random 1 (count $messages))
+    echo $messages[$random_index]
+end
+
+# Update prompt message on every prompt display
+function __update_random_prompt --on-event fish_prompt
+    set -g theme_newline_prompt (begin; set_color --bold brcyan; printf '%s\n' (__random_prompt_message); set_color normal; printf '\n'; set_color --bold brcyan; printf '%s' '\n> '; set_color normal; end)
+end
 
 # xdg
 set -gx XDG_DATA_HOME   $HOME/.local/share
