@@ -12,9 +12,9 @@ keymap("n", "q", "<Nop>")
 
 -- Insert modeを抜けたら英数入力に切り替え
 vim.api.nvim_create_autocmd("InsertLeave", {
-	callback = function()
-		vim.fn.system("im-select com.apple.keylayout.UnicodeHexInput")
-	end,
+  callback = function()
+    vim.fn.system("im-select com.apple.keylayout.UnicodeHexInput")
+  end,
 })
 keymap("i", "<Esc>", "<Esc>", { silent = true })
 
@@ -55,10 +55,10 @@ keymap("n", "<S-Tab>", ":Telescope lsp_references<cr>", { silent = true, desc = 
 
 -- Rust
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = "rust",
-	callback = function()
-		keymap({ "i", "n" }, "<F11>", ":Cargo run<cr>")
-	end,
+  pattern = "rust",
+  callback = function()
+    keymap({ "i", "n" }, "<F11>", ":Cargo run<cr>")
+  end,
 })
 
 -- jump cursor

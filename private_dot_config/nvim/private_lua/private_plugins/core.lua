@@ -1,17 +1,17 @@
 return {
-	-- Core Utilities
-	{ "dstein64/vim-startuptime" },
-	{ "vim-denops/denops.vim" },
-	{ "nvim-lua/plenary.nvim" },
-	{ "tani/vim-artemis" }, -- Compatibility between Vim and Neovim
-	{ "tpope/vim-surround" },
-	{ "jghauser/mkdir.nvim" },
-	{
-		"nacro90/numb.nvim", -- Line number preview
-		config = function()
-			require("numb").setup()
-		end,
-	},
-	{ "uga-rosa/ccc.nvim" }, -- Color picker
-	{ "brianhuster/live-preview.nvim" },
+  -- Core Utilities
+  { "dstein64/vim-startuptime" },
+  { "vim-denops/denops.vim" },
+  { "nvim-lua/plenary.nvim" },
+  { "tani/vim-artemis" }, -- Compatibility between Vim and Neovim
+  { "tpope/vim-surround" },
+  { "jghauser/mkdir.nvim" },
+  {
+    "nacro90/numb.nvim", -- Line number preview
+    config = function()
+      require("numb").setup()
+    end,
+  },
+  { "uga-rosa/ccc.nvim" }, -- Color picker
+  { "brianhuster/live-preview.nvim" },
 }
