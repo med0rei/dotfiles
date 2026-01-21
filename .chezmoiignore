@@ -1,3 +1,9 @@
 **/.git/**
 **/.DS_Store
 **/.localized
+
+.config/fish/fish_variables
+.config/fish/completions/**
+.config/karabiner/automatic_backups/**
+.config/wezterm/wallpapers/**
+.config/zsh/.zcompdump

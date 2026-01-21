@@ -1,0 +1,13 @@
+# General
+.env
+
+# macOS
+.DS_Store
+
+# Binary files
+*.out
+
+# JS/TS
+node_modules/
+
+**/.claude/settings.local.json
