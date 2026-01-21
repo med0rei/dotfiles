@@ -18,7 +18,7 @@ return {
     "rcarriga/nvim-notify",
     config = function()
       require("notify").setup({
-        background_colour = "#000000",
+        background_colour = "#2a5496",
       })
     end,
   },
@@ -39,8 +39,20 @@ return {
             variables = "bold",
           },
         },
+        palettes = {
+          carbonfox = {
+            magenta = "#f3a0bb",
+            pink = "#ffc4d6",
+            cyan = "#d6bddb",
+            blue = "#6b8dd6",
+
+            bg0 = "NONE",
+            bg1 = "NONE",
+          },
+        },
         groups = {
           all = {
+            -- 透過背景の維持
             NormalFloat = { bg = "NONE" },
             FloatBorder = { bg = "NONE" },
             TelescopeNormal = { bg = "NONE" },
@@ -51,11 +63,21 @@ return {
             TelescopeResultsBorder = { bg = "NONE" },
             TelescopePreviewNormal = { bg = "NONE" },
             TelescopePreviewBorder = { bg = "NONE" },
+
+            ["@keyword"] = { fg = "#ffc4d6", style = "bold" },
+            ["@string"] = { fg = "#e9d9ee" },
+            ["@function"] = { fg = "#6b8dd6", style = "bold" },
+            ["@variable"] = { fg = "#d6bddb" },
+            ["@comment"] = { fg = "#c9b3ce", style = "italic" },
+            ["@constant"] = { fg = "#f3a0bb", style = "bold" },
+            ["@conditional"] = { fg = "#ffc4d6", style = "bold" },
+            ["@number"] = { fg = "#d6a0bb", style = "italic" },
+            ["@operator"] = { fg = "#f3a0bb" },
+            ["@type"] = { fg = "#4d6ba6", style = "italic,bold" },
           },
         },
       })
       vim.cmd("colorscheme carbonfox")
-      -- Force transparent background for floating windows
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE" })
       vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "NONE" })
@@ -66,6 +88,10 @@ return {
       vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { bg = "NONE" })
       vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = "NONE" })
       vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { bg = "NONE" })
+      -- Cursor/visual highlights
+      -- vim.api.nvim_set_hl(0, "CursorLine", { bg = "#e9d9ee", blend = 30 })
+      -- vim.api.nvim_set_hl(0, "CursorColumn", { bg = "#e9d9ee", blend = 30 })
+      vim.api.nvim_set_hl(0, "Visual", { bg = "#ffc4d6", blend = 90 })
       -- Statusline font color to black
       vim.api.nvim_set_hl(0, "StatusLine", { fg = "#000000" })
       vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#000000" })
@@ -73,38 +99,234 @@ return {
   },
   {
     "feline-nvim/feline.nvim",
-    opts = {},
-    config = function(_, opts)
-      require("feline").setup()
-      require("feline").winbar.setup()
+    config = function()
+      local feline = require("feline")
+      local vi_mode = require("feline.providers.vi_mode")
+
+      local colors = {
+        pink = "#f3a0bb",
+        pink_light = "#ffc4d6",
+        pink_soft = "#d6a0bb",
+        blue = "#2a5496",
+        blue_light = "#6b8dd6",
+        blue_soft = "#4d6ba6",
+        lavender = "#d6bddb",
+        lavender_light = "#e9d9ee",
+        lavender_soft = "#c9b3ce",
+        fg = "#ffffff",
+        bg = "NONE",
+        black = "#000000",
+      }
+
+      -- viモードカラー
+      local vi_mode_colors = {
+        NORMAL = colors.blue_light,
+        INSERT = colors.pink_light,
+        VISUAL = colors.lavender_light,
+        BLOCK = colors.lavender,
+        REPLACE = colors.pink,
+        COMMAND = colors.blue_soft,
+      }
+
+      -- コンポーネント
+      local components = {
+        active = {
+          {}, -- 左側
+          {}, -- 中央
+          {}, -- 右側
+        },
+        inactive = {
+          {}, -- 左側
+          {}, -- 右側
+        },
+      }
+
+      -- 左側: viモード
+      table.insert(components.active[1], {
+        provider = function()
+          return " " .. vi_mode.get_vim_mode() .. " "
+        end,
+        hl = function()
+          return {
+            fg = colors.black,
+            bg = vi_mode_colors[vi_mode.get_vim_mode()] or colors.pink_light,
+            style = "bold",
+          }
+        end,
+        right_sep = {
+          str = "",
+          hl = function()
+            return {
+              fg = vi_mode_colors[vi_mode.get_vim_mode()] or colors.pink_light,
+              bg = colors.bg,
+            }
+          end,
+        },
+      })
+
+      -- 左側: ファイル情報
+      table.insert(components.active[1], {
+        provider = function()
+          local filename = vim.fn.expand("%:t")
+          if filename == "" then
+            return " [No Name] "
+          end
+          local icon =
+            require("nvim-web-devicons").get_icon(filename, vim.fn.expand("%:e"), { default = true })
+          return " " .. (icon or "") .. " " .. filename .. " "
+        end,
+        hl = {
+          fg = colors.lavender_soft,
+          bg = colors.bg,
+        },
+      })
+
+      -- 右側: Git情報
+      table.insert(components.active[3], {
+        provider = "git_branch",
+        hl = {
+          fg = colors.pink_soft,
+          bg = colors.bg,
+        },
+        icon = " ",
+        left_sep = " ",
+      })
+
+      -- 右側: LSP診断
+      table.insert(components.active[3], {
+        provider = function()
+          local errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+          if errors > 0 then
+            return " " .. errors .. " "
+          end
+          return ""
+        end,
+        hl = {
+          fg = colors.pink,
+          bg = colors.bg,
+        },
+        left_sep = " ",
+      })
+
+      table.insert(components.active[3], {
+        provider = function()
+          local warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+          if warnings > 0 then
+            return " " .. warnings .. " "
+          end
+          return ""
+        end,
+        hl = {
+          fg = colors.lavender,
+          bg = colors.bg,
+        },
+      })
+
+      -- 右側: 位置情報
+      table.insert(components.active[3], {
+        provider = function()
+          local line = vim.fn.line(".")
+          local col = vim.fn.col(".")
+          return string.format(" %d:%d ", line, col)
+        end,
+        hl = {
+          fg = colors.black,
+          bg = colors.blue_light,
+          style = "bold",
+        },
+        left_sep = {
+          str = "",
+          hl = {
+            fg = colors.blue_light,
+            bg = colors.bg,
+          },
+        },
+      })
+
+      -- 非アクティブウィンドウ
+      table.insert(components.inactive[1], {
+        provider = function()
+          local filename = vim.fn.expand("%:t")
+          if filename == "" then
+            return " [No Name] "
+          end
+          return " " .. filename .. " "
+        end,
+        hl = {
+          fg = colors.lavender_soft,
+          bg = colors.bg,
+        },
+      })
+
+      feline.setup({
+        components = components,
+        force_inactive = {
+          filetypes = {
+            "NvimTree",
+            "neo-tree",
+            "packer",
+            "startify",
+            "fugitive",
+            "fugitiveblame",
+            "qf",
+            "help",
+          },
+        },
+      })
+      feline.winbar.setup()
     end,
   },
   {
     "nanozuki/tabby.nvim",
     config = function()
+      vim.api.nvim_set_hl(0, "TabLineCute", {
+        fg = "#6b8dd6",
+        bg = "NONE",
+      })
+      vim.api.nvim_set_hl(0, "TabLineSelCute", {
+        fg = "#ffffff",
+        bg = "#f3a0bb",
+        bold = true,
+      })
+      vim.api.nvim_set_hl(0, "TabLineFillCute", {
+        bg = "NONE",
+      })
+      vim.api.nvim_set_hl(0, "TabLineWinCute", {
+        fg = "#d6bddb",
+        bg = "NONE",
+      })
+      vim.api.nvim_set_hl(0, "TabLineHeadCute", {
+        fg = "#ffffff",
+        bg = "#d6bddb",
+        bold = true,
+      })
+
       local theme = {
-        fill = "TabLineFill",
-        head = "TabLine",
-        current_tab = "TabLineSel",
-        tab = "TabLine",
-        win = "TabLine",
-        tail = "TabLine",
+        fill = "TabLineFillCute",
+        head = "TabLineHeadCute",
+        current_tab = "TabLineSelCute",
+        tab = "TabLineCute",
+        win = "TabLineWinCute",
+        tail = "TabLineHeadCute",
       }
+
       require("tabby").setup({
         line = function(line)
           return {
             {
-              { "  ", hl = theme.head },
+              { " 󰙴 ", hl = theme.head },
               line.sep("", theme.head, theme.fill),
             },
             line.tabs().foreach(function(tab)
               local hl = tab.is_current() and theme.current_tab or theme.tab
               return {
                 line.sep("", hl, theme.fill),
-                tab.is_current() and "" or "󰆣",
+                tab.is_current() and " " or " ",
                 tab.number(),
+                " ",
                 tab.name(),
-                tab.close_btn(""),
+                " ",
+                tab.close_btn("󰅖"),
                 line.sep("", hl, theme.fill),
                 hl = hl,
                 margin = " ",
@@ -114,8 +336,9 @@ return {
             line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
               return {
                 line.sep("", theme.win, theme.fill),
-                win.is_current() and "" or "",
+                win.is_current() and " " or " ",
                 win.buf_name(),
+                " ",
                 line.sep("", theme.win, theme.fill),
                 hl = theme.win,
                 margin = " ",
@@ -123,7 +346,7 @@ return {
             end),
             {
               line.sep("", theme.tail, theme.fill),
-              { "  ", hl = theme.tail },
+              { " 󰊠 ", hl = theme.tail },
             },
             hl = theme.fill,
           }
@@ -164,23 +387,21 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
       local highlight = {
-        "RainbowRed",
-        "RainbowYellow",
+        "RainbowPink",
+        "RainbowLavender",
         "RainbowBlue",
-        "RainbowOrange",
-        "RainbowGreen",
-        "RainbowViolet",
-        "RainbowCyan",
+        "RainbowPinkSoft",
+        "RainbowBlueSoft",
+        "RainbowLavenderSoft",
       }
       local hooks = require("ibl.hooks")
       hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-        vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-        vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-        vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-        vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-        vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-        vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+        vim.api.nvim_set_hl(0, "RainbowPink", { fg = "#ffc4d6" })
+        vim.api.nvim_set_hl(0, "RainbowLavender", { fg = "#e9d9ee" })
+        vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#6b8dd6" })
+        vim.api.nvim_set_hl(0, "RainbowPinkSoft", { fg = "#f3a0bb" })
+        vim.api.nvim_set_hl(0, "RainbowBlueSoft", { fg = "#4d6ba6" })
+        vim.api.nvim_set_hl(0, "RainbowLavenderSoft", { fg = "#c9b3ce" })
       end)
       vim.g.rainbow_delimiters = { highlight = highlight }
       require("ibl").setup({ scope = { highlight = highlight } })
