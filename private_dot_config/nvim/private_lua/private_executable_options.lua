@@ -25,6 +25,8 @@ opt.shiftwidth = 2
 -- 背景透過
 opt.winblend = 40 -- ウィンドウの不透明度
 -- opt.pumblend = 100 -- ポップアップメニューの不透明度
+-- 空行のチルダを非表示
+opt.fillchars = { eob = " " }
 
 g.mapleader = " "
 g["denops#deno"] = "/run/current-system/sw/bin/deno"
