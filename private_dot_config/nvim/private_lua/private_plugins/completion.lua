@@ -1,7 +1,7 @@
 return {
   {
     "saghen/blink.cmp",
-    build = "cargo build --release",
+    version = "1.*",
     config = function()
       require("blink.cmp").setup({
         keymap = {

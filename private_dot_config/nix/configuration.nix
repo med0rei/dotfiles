@@ -209,6 +209,7 @@
       "sketchybar"
       "im-select"
       "pinentry-touchid"
+      "hettysoft/tap/hetty"
     ];
 
     # Cask applications
