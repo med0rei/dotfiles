@@ -1,7 +1,17 @@
 return {
   {
+    "onsails/lspkind.nvim",
+    config = function()
+      require("lspkind").init({
+        mode = "symbol_text",
+        preset = "codicons",
+      })
+    end,
+  },
+  {
     "saghen/blink.cmp",
     version = "1.*",
+    dependencies = { "onsails/lspkind.nvim" },
     config = function()
       require("blink.cmp").setup({
         keymap = {
@@ -16,6 +26,15 @@ return {
         completion = {
           menu = {
             border = "single",
+            draw = {
+              components = {
+                kind_icon = {
+                  text = function(ctx)
+                    return require("lspkind").symbol_map[ctx.kind] or ""
+                  end,
+                },
+              },
+            },
           },
           documentation = {
             auto_show = true,
