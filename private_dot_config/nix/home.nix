@@ -30,7 +30,7 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    initExtra = ''
+    initContent = ''
       export GPG_TTY=$(tty)
     '';
   };

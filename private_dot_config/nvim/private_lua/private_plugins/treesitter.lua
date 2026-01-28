@@ -4,6 +4,7 @@ return {
     build = ":TSUpdate",
     main = "nvim-treesitter",
     opts = {
+      ensure_installed = { "gleam" },
       highlight = { enable = true },
     },
   },

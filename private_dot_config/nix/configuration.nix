@@ -1,5 +1,9 @@
-{ config, pkgs, username, ... }:
 {
+  config,
+  pkgs,
+  username,
+  ...
+}: {
   # Platform
   nixpkgs.hostPlatform = "aarch64-darwin";
 
@@ -35,6 +39,7 @@
     fzf
     tree
     procs
+    peco
     zoxide
     tmux
     screen
@@ -58,13 +63,15 @@
     erlang
     rebar3
     gleam
-    helix
     biome
     stylua
     efm-langserver
     pre-commit
     typos
     ruff
+    clang-tools
+    emmylua-ls
+    alejandra
 
     # Network tools
     nmap
@@ -114,8 +121,10 @@
     markdownlint-cli2
     mercurial
     php
+    phpactor
     pipx
     xdg-ninja
+    superhtml
   ];
 
   # System defaults
@@ -231,6 +240,7 @@
       "intellij-idea-ce"
       "datagrip"
       "jetbrains-toolbox"
+      "miniconda"
 
       # Communication
       "discord"

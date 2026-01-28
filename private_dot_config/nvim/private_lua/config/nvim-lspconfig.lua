@@ -27,6 +27,21 @@ capabilities = vim.tbl_deep_extend("force", capabilities, {
   offsetEncoding = { "utf-8", "utf-16" },
 })
 
+local lua_library_paths = {
+  vim.env.VIMRUNTIME .. "/lua",
+  vim.env.VIMRUNTIME .. "/lua/vim/_meta",
+  vim.fn.stdpath("config") .. "/lua",
+}
+
+local lua_unique_library_paths = {}
+local lua_seen_paths = {}
+for _, path in ipairs(lua_library_paths) do
+  if path and not lua_seen_paths[path] then
+    table.insert(lua_unique_library_paths, path)
+    lua_seen_paths[path] = true
+  end
+end
+
 -- Biome
 vim.lsp.config("biome", {
   on_attach = on_attach,
@@ -72,7 +87,19 @@ vim.lsp.config("pyright", {
 vim.lsp.config("phpactor", {
   on_attach = on_attach,
   capabilities = capabilities,
-  cmd = { vim.fn.expand("~") .. "/.config/composer/vendor/bin/phpactor", "language-server" },
+  filetypes = { "php", "php3", "php4", "php5", "phtml" },
+  cmd = { "phpactor", "language-server" },
+  root_dir = function(bufnr, on_dir)
+    local root = vim.fs.root(bufnr, { ".git", "composer.json", ".phpactor.json", ".phpactor.yml" })
+    if root then
+      on_dir(root)
+    else
+      -- フォールバック: ファイルの親ディレクトリを使用
+      local fname = vim.api.nvim_buf_get_name(bufnr)
+      on_dir(vim.fn.fnamemodify(fname, ":h"))
+    end
+  end,
+  workspace_required = false,
 })
 
 -- Rust
@@ -85,7 +112,7 @@ vim.lsp.config("rust_analyzer", {
 vim.lsp.config("html", {
   on_attach = on_attach,
   capabilities = capabilities,
-  cmd = { vim.fn.expand("~/.local/share/nvim/mason/bin/superhtml"), "lsp" },
+  cmd = { "superhtml", "lsp" },
 })
 
 -- TypeScript / JavaScript
@@ -107,6 +134,50 @@ vim.lsp.config("ts_ls", {
   workspace_required = true,
 })
 
+-- C/C++
+vim.lsp.config("clangd", {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = {
+    "clangd",
+    "--background-index",
+    "--clang-tidy",
+    "--completion-style=detailed",
+    "--header-insertion=iwyu",
+  },
+})
+
+vim.lsp.config("lua", {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "lua" },
+  cmd = {
+    "emmylua_ls",
+  },
+  settings = {
+    Lua = {
+      runtime = {
+        version = "LuaJIT",
+        pathStrict = true,
+      },
+      workspace = {
+        library = lua_unique_library_paths,
+        checkThirdParty = false,
+        ignoreDir = {
+          ".*",
+        },
+      },
+      telemetry = { enable = false },
+      hint = {
+        enable = true,
+        arrayIndex = "Enable",
+        setType = true,
+      },
+    },
+  },
+  workspace_required = false,
+})
+
 -- Enable all configured LSP servers
 vim.lsp.enable({
   "biome",
@@ -119,4 +190,6 @@ vim.lsp.enable({
   "html",
   "ts_ls",
   "gleam",
+  "clangd",
+  "lua",
 })

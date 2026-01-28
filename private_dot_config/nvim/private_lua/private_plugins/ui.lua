@@ -167,13 +167,13 @@ return {
       -- 左側: ファイル情報
       table.insert(components.active[1], {
         provider = function()
-          local filename = vim.fn.expand("%:t")
-          if filename == "" then
+          local filepath = vim.fn.expand("%:~:.")
+          if filepath == "" then
             return " [No Name] "
           end
-          local icon =
-            require("nvim-web-devicons").get_icon(filename, vim.fn.expand("%:e"), { default = true })
-          return " " .. (icon or "") .. " " .. filename .. " "
+          local filename = vim.fn.expand("%:t")
+          local icon = require("nvim-web-devicons").get_icon(filename, vim.fn.expand("%:e"), { default = true })
+          return " " .. (icon or "") .. " " .. filepath .. " "
         end,
         hl = {
           fg = colors.lavender_soft,

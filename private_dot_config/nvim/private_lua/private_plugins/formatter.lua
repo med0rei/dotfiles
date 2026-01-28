@@ -35,6 +35,14 @@ return {
         }
       end
 
+      local c_lang = function()
+        return {
+          exe = "clang-format",
+          args = { "--assume-filename", util.get_current_buffer_file_path() },
+          stdin = true,
+        }
+      end
+
       require("formatter").setup({
         logging = true,
         log_level = vim.log.levels.WARN,
@@ -98,6 +106,19 @@ return {
               return {
                 exe = "gleam",
                 args = { "format", "--stdin", util.get_current_buffer_file_path() },
+                stdin = true,
+              }
+            end,
+          },
+
+          -- C/C++
+          c = { c_lang },
+          cpp = { c_lang },
+
+          nix = {
+            function()
+              return {
+                exe = "alejandra",
                 stdin = true,
               }
             end,
