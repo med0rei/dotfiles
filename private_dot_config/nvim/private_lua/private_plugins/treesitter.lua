@@ -2,11 +2,18 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    main = "nvim-treesitter",
-    opts = {
-      ensure_installed = { "gleam" },
-      highlight = { enable = true },
-    },
+    lazy = false,
+    config = function()
+      require("nvim-treesitter").setup({})
+      require("nvim-treesitter").install({ "gleam" })
+    end,
+    init = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+        end,
+      })
+    end,
   },
   {
     "windwp/nvim-ts-autotag",
