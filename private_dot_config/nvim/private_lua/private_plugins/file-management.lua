@@ -38,11 +38,7 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     config = function()
-      require("telescope").setup({
-        defaults = {
-          winblend = 0,
-        },
-      })
+      require("config.telescope")
     end,
   },
   { "Shougo/neomru.vim" },
