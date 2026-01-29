@@ -89,6 +89,9 @@ vim.lsp.config("phpactor", {
   capabilities = capabilities,
   filetypes = { "php", "php3", "php4", "php5", "phtml" },
   cmd = { "phpactor", "language-server" },
+  init_options = {
+    ["language_server_configuration.auto_config"] = false,
+  },
   root_dir = function(bufnr, on_dir)
     local root = vim.fs.root(bufnr, { ".git", "composer.json", ".phpactor.json", ".phpactor.yml" })
     if root then
