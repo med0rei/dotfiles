@@ -125,6 +125,8 @@
     pipx
     xdg-ninja
     superhtml
+    bash-language-server
+    shfmt
   ];
 
   # System defaults

@@ -147,6 +147,7 @@ vim.lsp.config("clangd", {
   },
 })
 
+-- Lua
 vim.lsp.config("lua", {
   on_attach = on_attach,
   capabilities = capabilities,
@@ -178,6 +179,12 @@ vim.lsp.config("lua", {
   workspace_required = false,
 })
 
+-- Bash
+vim.lsp.config("bashls", {
+  filetypes = { "bash", "sh" },
+  cmd = { "bash-language-server", "start" },
+})
+
 -- Enable all configured LSP servers
 vim.lsp.enable({
   "biome",
@@ -192,4 +199,5 @@ vim.lsp.enable({
   "gleam",
   "clangd",
   "lua",
+  "bashls",
 })

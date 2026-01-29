@@ -43,6 +43,13 @@ return {
         }
       end
 
+      local sh = function()
+        return {
+          exe = "shfmt",
+          args = { "-i", "2", "-ci", "-s" },
+          stdin = true,
+        }
+      end
       require("formatter").setup({
         logging = true,
         log_level = vim.log.levels.WARN,
@@ -123,6 +130,9 @@ return {
               }
             end,
           },
+
+          bash = { sh },
+          sh = { sh },
         },
       })
     end,
