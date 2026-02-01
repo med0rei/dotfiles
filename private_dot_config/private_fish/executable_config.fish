@@ -29,7 +29,8 @@ set -g theme_newline_cursor            yes
 function __random_prompt_message
     set -l messages \
         "Eclipse first, the rest nowhere." \
-        "心不在焉，視而不見，聽而不聞，食而不知其味。"
+        "心不在焉，視而不見，聽而不聞，食而不知其味。" \
+        "期待ではなく準備をする。"
 
     set -l random_index (random 1 (count $messages))
     echo $messages[$random_index]
@@ -191,6 +192,7 @@ alias rm       "gomi"
 alias rmrm     "/bin/rm"
 alias venv     "source ./venv/bin/activate.fish"
 alias wget     "wget --hsts-file='$XDG_DATA_HOME/wget-hsts'"
+alias wine     "LANG=ja_JP.UTF-8 wine"
 alias y        "yarn"
 alias yz       "yazi"
 

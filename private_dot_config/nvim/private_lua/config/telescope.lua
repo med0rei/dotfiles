@@ -8,7 +8,9 @@ table.insert(vimgrep_arguments, "--hidden")
 table.insert(vimgrep_arguments, "--glob")
 
 table.insert(vimgrep_arguments, "!**/.git/*")
+table.insert(vimgrep_arguments, "--glob")
 table.insert(vimgrep_arguments, "!**/.env")
+table.insert(vimgrep_arguments, "--glob")
 table.insert(vimgrep_arguments, "!**/.env.*")
 
 telescope.setup({

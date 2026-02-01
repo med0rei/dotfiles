@@ -221,6 +221,7 @@
       "im-select"
       "pinentry-touchid"
       "hettysoft/tap/hetty"
+      "winetricks"
     ];
 
     # Cask applications
